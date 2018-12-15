@@ -15,8 +15,8 @@ def main():
 	if os.name == "posix":
 		ard = arduino("/dev/tty.usbserial-AH06LA61", 115200)
 	####### LINUX
-	else
-		ard = arduino("/dev/tty.ACM0", 115200)
+	else:
+		ard = arduino("/dev/ttyUSB0", 115200)
 
 	ard.connect()
 
