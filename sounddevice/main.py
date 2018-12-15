@@ -1,6 +1,7 @@
 from recorder import recorder
 from player import player
 from arduino import arduino
+import os
 import time
 
 
@@ -10,7 +11,12 @@ def main():
 	rec = recorder("", None ,1)
 	play = player("", None, 1)
 
-	ard = arduino("/dev/tty.usbserial-AH06LA61", 115200)
+	####### MAX OSX
+	if os.name == "posix":
+		ard = arduino("/dev/tty.usbserial-AH06LA61", 115200)
+	####### LINUX
+	else
+		ard = arduino("/dev/tty.ACM0", 115200)
 
 	ard.connect()
 
