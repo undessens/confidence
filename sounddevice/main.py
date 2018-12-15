@@ -3,6 +3,7 @@ from player import player
 from arduino import arduino
 import os
 import time
+import threading
 
 
 def main():
@@ -14,50 +15,43 @@ def main():
 
 	#ard = arduino("/dev/tty.usbserial-AH06LA61", 115200)
 	ard = arduino("/dev/ttyUSB0", 115200)
-
-		
-
 	ard.connect()
+	threadSerial = threading.Thread(target=arduino.loopReadSerial, args=([ard]) )
+	threadSerial.start()
 
-	print "Welcome"
-
+	print("Welcome")
+	nameFile = "truc5.wav"
 	#rec.recordFile(nameFile)
 	##play the same file
-	#play.playFile(nameFile)
+	
+	# PLAYER
+	# threadPlayer = threading.Thread(target=player.playFile, args=(play, nameFile) )
+	# threadPlayer.start()
+
+	
+	play.playFile(nameFile)
+
+	#rec.recordFile(nameFile)
 
 	# Wait for arduino to initialize arduino serial 
 	time.sleep(2)
-
 
 	ard.setLedState(0, 2)
 	ard.setLedState(1, 2)
 	ard.setLedState(2, 2)
 	ard.sendLedState()
+	# time.sleep(7)
 
-	time.sleep(7)
+	while True:
 
-	ard.setLedState(0, 0)
-	ard.setLedState(1, 0)
-	ard.setLedState(2, 0)
-	ard.setLedState(3, 2)
-	ard.setLedState(4, 2)
-	ard.setLedState(5, 2)
-	ard.setLedState(6, 2)
-	ard.setLedState(7, 1)
-	ard.sendLedState()
-
-	time.sleep(3)
-
-	print "end"
+		#print "loop"
+		if(not(ard.allowRead)):
+	 		ard.sendLedState()
+	 		ard.allowRead = True
+	 	
+	 	time.sleep(0.1)
 
 
-
-
-
-	# while True:
-
-	# 	arduino.readSerial()
-	# 	time.sleep(0.1)
 
 
 

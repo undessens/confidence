@@ -41,7 +41,7 @@ class recorder:
                 print('RECORDING')
                 print('#' * 80)
                 n=0
-                while n<450:
+                while n<2000:
                     file.write(self.q.get())
                     n = n+1
 

@@ -1,4 +1,5 @@
 import serial
+import time
 
 class arduino:
 
@@ -10,8 +11,8 @@ class arduino:
 		
 		#Buttons state
 		self.buttonState = []
-
 		self.ledState = []
+		self.allowRead = False
 
 		self.initState()
 
@@ -19,7 +20,7 @@ class arduino:
 
 	def initState(self):
 
-		print "Init state"
+		print ("Init state")
 
 		for i in range(self.numButtons) :
 			self.buttonState.append(False)
@@ -34,34 +35,47 @@ class arduino:
 
 		try :
 			self.s = serial.Serial(self.port, self.baudrate)
-			print "connected"
+			print ("connected")
 		except :
-			print "***impossible de se connecter"
+			print ("***impossible de se connecter")
 
 
 
+	def loopReadSerial(self):
 
+		while True:
+			if(self.allowRead):
+				
+				self.readSerial()
+				self.allowRead=False
+			time.sleep(0.1)
 
 
 
 	def readSerial(self):
 
-		bytye = ''
+		byte = ''
 		byte = self.s.read(1)
+
 		newValue = []
-
-		for i in range(0, numButtons):
-			self.newValue[i] = byte & (1<<i)
-
 		for i in range(0, self.numButtons):
-			
-			# Button is pressed
-			if( self.newValue[i] and not(self.buttonState[i])):
-				self.buttonPressed(i)
+			newValue.append(0)
 
 
-			#update values
-			self.buttonState[i] = newValue[i]
+		if(byte):
+			for i in range(0, self.numButtons):
+				newValue[i] = ord(byte) & (1<<i)
+
+			for i in range(0, self.numButtons):
+				
+				# Button is pressed
+				if( newValue[i] and not(self.buttonState[i])):
+					self.buttonPressed(i)
+
+
+				#update values
+				self.buttonState[i] = newValue[i]
+
 
 	def buttonPressed(self, index):
 
@@ -77,7 +91,7 @@ class arduino:
 
 		msg += 'A'
 		self.s.write(msg)
-		print "message send : "+msg
+		#print "message send : "+msg
 
 	def setLedState( self, index , state): 
 
@@ -85,7 +99,8 @@ class arduino:
 			if(state >=0 and state < 3):
 				self.ledState[index] = state
 
-		print "ledState modified"
+		print (
+			"ledState modified")
 		print self.ledState
 
 

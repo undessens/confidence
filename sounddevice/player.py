@@ -51,19 +51,20 @@ class player:
 
 		with sf.SoundFile(filename) as f:
 			for _ in range(self.buffersize):
-				data = f.buffer_read(self.blocksize, ctype='float')
+				data = f.buffer_read(self.blocksize, dtype='float32')
+				#data = f.buffer_read(self.blocksize, 'float32')
 				if not data:
-				    break
+				    # break
 				self.q.put_nowait(data)  # Pre-fill queue
 
 			stream = sd.RawOutputStream(
 				samplerate=self.samplerate, blocksize=self.blocksize,
-				device=self.device, channels=self.channel, dtype='float32',
-				callback=self.callback, finished_callback=self.end)
+				device=self.device, channels=self.channel, dtype='float32',	callback=self.callback, finished_callback=self.end)
+				
 			with stream:
 			    timeout = self.blocksize * self.buffersize / f.samplerate
 			    while data:
-			        data = f.buffer_read(self.blocksize, ctype='float')
+			        data = f.buffer_read(self.blocksize, dtype='float32')
 			        self.q.put(data, timeout=timeout)
-			    event.wait()  # Wait until playback is finished
+			    # event.wait()  # Wait until playback is finished
 
