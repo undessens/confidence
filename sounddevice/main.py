@@ -11,12 +11,11 @@ def main():
 	rec = recorder("", None ,1)
 	play = player("", None, 1)
 
-	####### MAX OSX
-	if os.name == "posix":
-		ard = arduino("/dev/tty.usbserial-AH06LA61", 115200)
-	####### LINUX
-	else:
-		ard = arduino("/dev/ttyUSB0", 115200)
+
+	#ard = arduino("/dev/tty.usbserial-AH06LA61", 115200)
+	ard = arduino("/dev/ttyUSB0", 115200)
+
+		
 
 	ard.connect()
 
@@ -28,7 +27,6 @@ def main():
 
 	# Wait for arduino to initialize arduino serial 
 	time.sleep(2)
-	print "GO"
 
 
 	ard.setLedState(0, 2)

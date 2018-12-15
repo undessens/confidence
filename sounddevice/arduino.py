@@ -1,4 +1,4 @@
-from serial import Serial
+import serial
 
 class arduino:
 
@@ -33,10 +33,10 @@ class arduino:
 	def connect(self):
 
 		try :
-			self.s = Serial(self.port, self.baudrate)
+			self.s = serial.Serial(self.port, self.baudrate)
 			print "connected"
 		except :
-			print "impossible de se connecter"
+			print "***impossible de se connecter"
 
 
 
