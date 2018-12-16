@@ -43,12 +43,14 @@ class arduino:
 
 	def loopReadSerial(self):
 
+		
 		while True:
 			if(self.allowRead):
 				
 				self.readSerial()
 				self.allowRead=False
 			time.sleep(0.1)
+
 
 
 
