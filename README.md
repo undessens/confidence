@@ -1,5 +1,5 @@
-# leconteestbon
-Hackton Crest 2018 . Le conte est bon is a box for old people, made for sharing audio stories. Record and play trough an really simple and intuitive tangible system. 
+# Confidence
+Hackton Crest 2018 . Confidence is a system for old people, made for sharing audio stories. Record and play trough an really simple and intuitive tangible system. 
 
 
 # PYTHON
