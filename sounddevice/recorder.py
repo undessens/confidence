@@ -21,6 +21,7 @@ class recorder:
         self.samplerate = int(device_info['default_samplerate'])
         self.q = queue.Queue()
         self.channel = _channel
+        self.lastRecordedIndex = -1
 
 
     # est-ce une fonction SELF ???
@@ -33,7 +34,7 @@ class recorder:
     def recordFile(self, filename):
         # Make sure the file is opened before recording anything:
         # check the args.subtype removed
-        with sf.SoundFile(filename, mode='x', samplerate=self.samplerate,
+        with sf.SoundFile(self.folder+"/"+filename, mode='x', samplerate=self.samplerate,
                           channels=self.channel ) as file:
             with sd.InputStream(samplerate=self.samplerate, device=self.device,
                                 channels=self.channel, callback=self.callback):
@@ -41,9 +42,24 @@ class recorder:
                 print('RECORDING')
                 print('#' * 80)
                 n=0
-                while n<2000:
+                while n<1000:
                     file.write(self.q.get())
                     n = n+1
+
+    def recordFileForIndex(self, index):
+        if(index != -1 ):
+            self.lastRecordedIndex = index
+            self.recordFile(str(index)+".wav")
+
+    def getLastRecordedIndex(self):
+
+        r = -1
+
+        if(self.lastRecordedIndex > -1):
+            r = self.lastRecordedIndex
+            self.lastRecordedIndex = -1
+
+        return  r
 
     def update(self):
 

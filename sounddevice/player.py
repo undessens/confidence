@@ -16,17 +16,18 @@ class player:
 		# Transport attribute
 		self.isPlaying = False
 
+	def playFileFromIndex(self, index):
 
-	def end(self):
-		print "End of playing file"
-		self.isPlaying = False
+		if(index != -1 ):
+			self.playFile(str(index)+".wav")
+
 
 	def playFile(self, filename):
 
 		self.isPlaying = True
 		
-
-		data, fs = sf.read(filename, dtype='float32')
+		self.stop()
+		data, fs = sf.read(self.folder+"/"+filename, dtype='float32')
 		sd.play(data, fs, device=self.device)
 		print('#' * 80)
 		print('PLAYING')

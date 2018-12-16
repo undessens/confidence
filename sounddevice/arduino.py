@@ -18,9 +18,12 @@ class arduino:
 
 		self.s  =  None
 
+		self.isNewEvent = False
+		self.lastButtonPressed = -1
+
 	def initState(self):
 
-		print ("Init state")
+		print ("Init state ARDUINO ")
 
 		for i in range(self.numButtons) :
 			self.buttonState.append(False)
@@ -28,31 +31,31 @@ class arduino:
 		for i in range(self.numButtons) :
 			self.ledState.append(0)
 
-		print self.buttonState
-		print self.ledState
+		#print self.buttonState
+		#print self.ledState
 
 	def connect(self):
 
 		try :
 			self.s = serial.Serial(self.port, self.baudrate)
+			#in case of connecting trouble
+			#self.s.close()
+			#self.s = serial.Serial(self.port, self.baudrate)
 			print ("connected")
 		except :
 			print ("***impossible de se connecter")
 
 
 
-	def loopReadSerial(self):
+	def loopReadSerial(self, run_event):
 
 		
-		while True:
+		while run_event.is_set():
 			if(self.allowRead):
 				
 				self.readSerial()
 				self.allowRead=False
 			time.sleep(0.1)
-
-
-
 
 	def readSerial(self):
 
@@ -81,11 +84,25 @@ class arduino:
 
 	def buttonPressed(self, index):
 
+		
 		print "buttonPressed : "+str(index)
+		self.lastButtonPressed = index
+		self.isNewEvent = True
 
+	def getLastButtonPressed(self):
+
+		r = -1
+
+		if(self.isNewEvent):
+			self.isNewEvent = False
+			r = self.lastButtonPressed
+			self.lastButtonPressed = -1
+
+		return  r
 
 	def sendLedState(self):
 
+		# print "SEND STATE"
 		msg = ""
 
 		for i in range(0, self.numButtons):
@@ -101,9 +118,8 @@ class arduino:
 			if(state >=0 and state < 3):
 				self.ledState[index] = state
 
-		print (
-			"ledState modified")
-		print self.ledState
+		# print ("ledState modified")
+		# print self.ledState
 
 
 
